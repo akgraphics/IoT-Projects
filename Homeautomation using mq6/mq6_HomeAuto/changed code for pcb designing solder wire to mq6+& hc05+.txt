@@ -1,0 +1,80 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <SoftwareSerial.h>
+//I2C pins declaration
+LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
+SoftwareSerial BTSerial(4,3); // RX | TX
+int BULB1 = 13;
+int BULB2 = 10;
+int sensorValue;
+
+void setup() 
+{
+  lcd.begin(16, 2); 
+  Serial.begin(9600);
+   BTSerial.begin(9600);
+    pinMode(BULB1,OUTPUT); // Trigger for Bulb 1
+    pinMode(BULB2,OUTPUT); // Trigger for Bulb 2
+
+   
+    lcd.print("....WELCOME.....");
+   
+    lcd.setCursor(0,1);
+       delay(2000);
+    lcd.clear();
+
+    lcd.setCursor(0,1);
+    lcd.print("Plz Wait....");
+    delay(2000);
+    lcd.clear();
+
+    if(sensorValue>200)
+{
+  lcd.setCursor(1,0);
+  
+  lcd.print("Gas detected");
+  delay(5000);
+  lcd.clear();
+}
+}
+void loop()
+{
+
+  lcd.print("Value of Gas:");
+     lcd.print(0,1);
+    //lcd.setCursor(10, 0);
+     int sensorValue = analogRead(A0); 
+    lcd.print( sensorValue); 
+     lcd.setCursor(0,1);
+    delay(500);
+   lcd.clear();
+
+ if(BTSerial.available())
+{
+    Serial.println("BTSerial is available");
+    char data=BTSerial.read();
+    switch (data) 
+{
+    case 'a':
+      digitalWrite(BULB1,1);
+      Serial.println("Changed the BULB1 value to HIGH");
+      break;
+    case 'b':
+      digitalWrite(BULB1,0);
+      Serial.println("Changed the BULB1 value to LOW");
+      break;
+        default: 
+      // if nothing else matches, do the default
+      // default is optional
+    break;
+  
+  
+
+
+
+
+
+  
+
+}
+}}
